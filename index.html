@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Une semaine, tous ensemble</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,400&family=Jost:wght@300;400;500&display=swap');
+
+  :root{
+    --cream:#F3EEE3;
+    --blush:#D9CBB5;
+    --sage:#8A9678;
+    --ink:#2E2B22;
+    --grey:#6E6A5C;
+    --gold:#B8954F;
+    --line: rgba(46,43,34,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Jost', sans-serif;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces', serif;
+    font-weight:400;
+    letter-spacing:0.01em;
+  }
+  .section{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:6vh 6vw;
+    position:relative;
+    text-align:center;
+  }
+  .fade-in{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity 1.1s ease, transform 1.1s ease;
+  }
+  .fade-in.visible{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- music control ---------- */
+  #music-toggle{
+    position:fixed;
+    bottom:28px;
+    right:28px;
+    width:54px;height:54px;
+    border-radius:50%;
+    background:var(--ink);
+    color:var(--cream);
+    border:none;
+    cursor:pointer;
+    z-index:999;
+    display:flex;align-items:center;justify-content:center;
+    box-shadow:0 6px 18px rgba(28,26,24,0.3);
+    transition:transform .3s ease;
+  }
+  #music-toggle:hover{transform:scale(1.08);}
+  #music-toggle svg{width:22px;height:22px;}
+
+  /* ---------- hero ---------- */
+  .hero{
+    background:
+      radial-gradient(circle at 30% 20%, rgba(184,145,84,0.08), transparent 55%),
+      radial-gradient(circle at 75% 80%, rgba(28,26,24,0.04), transparent 55%),
+      var(--cream);
+  }
+  .hero .eyebrow{
+    font-family:'Jost';
+    text-transform:uppercase;
+    letter-spacing:0.32em;
+    font-size:0.68rem;
+    color:var(--grey);
+    margin-bottom:26px;
+  }
+  .hero h1{
+    font-size:clamp(2.6rem, 7vw, 5.2rem);
+    line-height:1.05;
+    max-width:14ch;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--gold);
+  }
+  .hero p.sub{
+    margin-top:24px;
+    font-size:1.1rem;
+    max-width:38ch;
+    color:rgba(28,26,24,0.75);
+  }
+  .scroll-cue{
+    margin-top:60px;
+    font-size:0.75rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:rgba(28,26,24,0.5);
+    animation:bob 2.4s ease-in-out infinite;
+  }
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(8px);}}
+
+  /* ---------- carousel signature ---------- */
+  .carousel-orbit{
+    position:relative;
+    width:260px;height:260px;
+    margin:50px auto 0;
+  }
+  .carousel-orbit .hub{
+    position:absolute;top:50%;left:50%;width:14px;height:14px;
+    background:var(--gold);border-radius:50%;
+    transform:translate(-50%,-50%);
+  }
+  .horse{
+    position:absolute;
+    top:50%;left:50%;
+    width:46px;height:46px;
+    transform-origin:-90px 0;
+    animation:orbit 14s linear infinite;
+  }
+  .horse:nth-child(2){animation-delay:-4.6s;}
+  .horse:nth-child(3){animation-delay:-9.3s;}
+  .horse svg{width:100%;height:100%;fill:none;stroke:var(--ink);stroke-width:1.4;}
+  @keyframes orbit{
+    from{transform:translate(-50%,-50%) rotate(0deg) translate(90px) rotate(0deg);}
+    to{transform:translate(-50%,-50%) rotate(360deg) translate(90px) rotate(-360deg);}
+  }
+
+  /* ---------- photo sections ---------- */
+  .photo-section{
+    background-size:cover;
+    background-position:center;
+    color:var(--cream);
+  }
+  .photo-section::before{
+    content:'';
+    position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(28,26,24,0.15), rgba(28,26,24,0.65));
+  }
+  .photo-section .content{position:relative;z-index:2;max-width:46ch;}
+  .photo-section h2{font-size:clamp(2rem,5vw,3.2rem);}
+  .photo-section p{margin-top:18px;font-size:1.05rem;opacity:0.92;line-height:1.6;}
+
+  /* ---------- text sections ---------- */
+  .text-section h2{
+    font-size:clamp(1.9rem,4vw,2.8rem);
+    margin-bottom:26px;
+  }
+  .text-section p{
+    max-width:54ch;
+    font-size:1.05rem;
+    line-height:1.75;
+    color:rgba(28,26,24,0.85);
+  }
+  .text-section p + p{margin-top:16px;}
+
+  .divider{
+    width:60px;height:1px;background:var(--line);
+    margin:34px auto;
+  }
+
+  /* ---------- family grid ---------- */
+  .family-grid{
+    display:flex;
+    gap:60px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:40px;
+    max-width:900px;
+  }
+  .family-col{min-width:240px;}
+  .family-col h3{
+    font-size:1.05rem;
+    color:var(--grey);
+    margin-bottom:14px;
+    font-style:italic;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .family-col ul{list-style:none;font-size:0.98rem;line-height:1.9;color:rgba(28,26,24,0.8);}
+
+  /* ---------- ask section ---------- */
+  .ask-section{
+    background:var(--ink);
+    color:var(--cream);
+  }
+  .ask-section h2{color:var(--cream);}
+  .ask-section .divider{background:rgba(250,243,234,0.25);}
+  .ask-section p{color:rgba(250,243,234,0.85);}
+  .signature{
+    font-family:'Fraunces';
+    font-style:italic;
+    font-size:1.3rem;
+    margin-top:30px;
+    color:var(--gold);
+  }
+
+  .footer-note{
+    font-size:0.85rem;
+    color:rgba(28,26,24,0.55);
+    padding:40px;
+    text-align:center;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .horse, .scroll-cue{animation:none;}
+    .fade-in{transition:none;}
+  }
+</style>
+</head>
+<body>
+
+<button id="music-toggle" aria-label="Activer la musique">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+</button>
+
+<!-- HERO -->
+<section class="section hero">
+  <div class="fade-in visible">
+    <div class="eyebrow">samedi 25 juillet — Saint-Bruno-de-Montarville</div>
+    <h1>Une semaine pour <em>se retrouver</em>,<br>tous ensemble.</h1>
+    <p class="sub">La Californie, Québec, Montréal — une seule maison, une seule grande table, et une semaine qui ne reviendra pas deux fois.</p>
+    <div class="carousel-orbit">
+      <div class="hub"></div>
+      <div class="horse"><svg viewBox="0 0 64 64"><path d="M8 40c0-6 4-10 9-12l3-9c1-3 4-5 7-5h6c3 0 6 2 7 5l3 9c5 2 9 6 9 12v6c0 2-2 4-4 4H12c-2 0-4-2-4-4v-6z"/></svg></div>
+      <div class="horse"><svg viewBox="0 0 64 64"><path d="M8 40c0-6 4-10 9-12l3-9c1-3 4-5 7-5h6c3 0 6 2 7 5l3 9c5 2 9 6 9 12v6c0 2-2 4-4 4H12c-2 0-4-2-4-4v-6z"/></svg></div>
+      <div class="horse"><svg viewBox="0 0 64 64"><path d="M8 40c0-6 4-10 9-12l3-9c1-3 4-5 7-5h6c3 0 6 2 7 5l3 9c5 2 9 6 9 12v6c0 2-2 4-4 4H12c-2 0-4-2-4-4v-6z"/></svg></div>
+    </div>
+    <div class="scroll-cue">défiler ↓</div>
+  </div>
+</section>
+
+<!-- LA MAISON -->
+<section class="section photo-section" style="background-image:url('images/gazebo-ceremonie.jpg');">
+  <div class="content fade-in">
+    <h2>La maison est déjà parfaite.</h2>
+    <p>Une grande cour pour une table immense. Un gazebo pour l'ombre des après-midis chauds. Et ce carrousel, planté là comme s'il attendait que des enfants de 1 à 12 ans viennent enfin le faire tourner.</p>
+  </div>
+</section>
+
+<!-- POURQUOI MAINTENANT -->
+<section class="section text-section">
+  <div class="fade-in">
+    <h2>Pourquoi cette semaine, précisément</h2>
+    <div class="divider"></div>
+    <p>Ce n'est pas un souper de famille. C'est la Californie et le Québec qui se croisent, sous le même toit, pendant que tout le monde est encore assez en santé, assez jeune, assez disponible pour que ça arrive.</p>
+    <p>Constance et Jean-Francoys au centre de tout ça. Vos enfants, vos petits-enfants, et la famille d'Éric-Olivier — réunis une seule fois, peut-être, pour very longtemps.</p>
+  </div>
+</section>
+
+<!-- QUI SERA LÀ -->
+<section class="section text-section" style="background:linear-gradient(180deg, var(--cream), #F3ECE1);">
+  <div class="fade-in">
+    <h2>Qui sera là</h2>
+    <div class="divider"></div>
+    <div class="family-grid">
+      <div class="family-col">
+        <h3>Famille d'Éric-Olivier</h3>
+        <ul>
+          <li>Constance & Jean-Francoys</li>
+          <li>Anne-Isabelle, Ryan, Autumn, Orion</li>
+          <li>Pierre-Francois, Sarah, Estelle</li>
+        </ul>
+      </div>
+      <div class="family-col">
+        <h3>Notre famille</h3>
+        <ul>
+          <li>Zahia & Abder</li>
+          <li>Lydia, Alexandre, Roselyne, Adelyne + parents</li>
+          <li>Stéfanie, Lounes, Olivia, Henri-James + parents</li>
+        </ul>
+      </div>
+      <div class="family-col">
+        <h3>Et autour</h3>
+        <ul>
+          <li>Parrain & marraine</li>
+          <li>Quelques couples d'amis chers</li>
+          <li>Une trentaine de cœurs, en tout</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ON S'OCCUPE DE TOUT -->
+<section class="section photo-section" style="background-image:url('images/table-longue-jour.jpg');">
+  <div class="content fade-in">
+    <h2>Vous recevez. Nous nous occupons du reste.</h2>
+    <p>Une infirmière sera présente toute la soirée pour veiller sur Abder — personne n'aura à s'en inquiéter. Deux gardiennes prendront le relais pour les enfants jusqu'au matin, pour que petits et grands dorment tranquilles, et que les adultes puissent enfin juste s'asseoir et parler. Vous ouvrez la porte — on prend soin du déroulement.</p>
+  </div>
+</section>
+
+<!-- LA TABLE -->
+<section class="section photo-section" style="background-image:url('images/table-etoiles.avif');">
+  <div class="content fade-in">
+    <h2>Une table, un soir</h2>
+    <p>Une longue table dressée dans la cour, les guirlandes qui s'allument doucement à mesure que le ciel s'assombrit, le gazebo comme abri si la météo de juillet a ses caprices. Les cœurs seront déjà tous là — le reste n'est qu'une formalité.</p>
+    <p style="margin-top:14px;">Et, peut-être, ce soir-là, une cérémonie. Vous, Jean-Francoys, au centre de tout — comme célébrant.</p>
+  </div>
+</section>
+
+<!-- L'ALLÉE -->
+<section class="section photo-section" style="background-image:url('images/allee-lumieres.jpg');">
+  <div class="content fade-in">
+    <h2>Le chemin jusqu'à vous</h2>
+    <p>On imagine cette allée sous les arbres, les lumières suspendues comme des étoiles basses, et tout le monde qui s'avance doucement vers la même place — celle que vous nous offrez.</p>
+  </div>
+</section>
+
+<!-- LE CÉLÉBRANT -->
+<section class="section ask-section">
+  <div class="fade-in">
+    <h2>Une demande, du fond du cœur</h2>
+    <div class="divider"></div>
+    <p>Nous aimerions vous demander d'être le célébrant de notre mariage, cette semaine-là — devant toute la famille réunie, dans cette cour qui sera devenue, pour quelques jours, la nôtre à tous.</p>
+    <p>C'est légalement possible : une désignation officielle existe pour ça, le processus prend quelques jours, et nous nous occupons de toutes les démarches. Vous n'avez qu'à dire oui.</p>
+    <div class="signature">— avec tout notre amour</div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section class="section" style="padding-top:4vh;padding-bottom:4vh;">
+  <div class="fade-in" style="width:100%;max-width:1100px;">
+    <div style="display:flex;gap:18px;flex-wrap:wrap;justify-content:center;">
+      <img src="images/table-bougies.jpg" alt="Table aux chandelles" style="width:30%;min-width:260px;height:280px;object-fit:cover;border-radius:2px;">
+      <img src="images/table-fleurs-peche.jpg" alt="Fleurs pêche sur la table" style="width:30%;min-width:260px;height:280px;object-fit:cover;border-radius:2px;">
+      <img src="images/table-soir-chic.jpg" alt="Table élégante en soirée" style="width:30%;min-width:260px;height:280px;object-fit:cover;border-radius:2px;">
+    </div>
+  </div>
+</section>
+
+<!-- CLOSING -->
+<section class="section hero">
+  <div class="fade-in">
+    <div class="eyebrow">Saint-Bruno-de-Montarville · samedi 25 juillet</div>
+    <h1>Dites <em>oui</em>.</h1>
+    <p class="sub">On s'occupe du reste — vous, ouvrez simplement la porte.</p>
+  </div>
+</section>
+
+<div class="footer-note">Fait avec amour, pour Constance et Jean-Francoys.</div>
+
+<audio id="ambient" loop preload="auto"></audio>
+
+<script>
+  // ---- scroll reveal ----
+  const observer = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+  }, {threshold:0.2});
+  document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+  // ---- ambient generative music (Web Audio, no external file) ----
+  let audioCtx, started = false, nodes = [];
+
+  function startAmbient(){
+    if(started) return;
+    started = true;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const master = audioCtx.createGain();
+    master.gain.value = 0.0;
+    master.connect(audioCtx.destination);
+    master.gain.linearRampToValueAtTime(0.07, audioCtx.currentTime + 3);
+
+    const notes = [261.63, 329.63, 392.00, 440.00, 523.25]; // C E G A C (pentatonic-ish, soft)
+    function pluck(freq, time, dur){
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = freq;
+      gain.gain.setValueAtTime(0, time);
+      gain.gain.linearRampToValueAtTime(1, time + 1.2);
+      gain.gain.linearRampToValueAtTime(0, time + dur);
+      osc.connect(gain).connect(master);
+      osc.start(time);
+      osc.stop(time + dur + 0.5);
+    }
+    function loop(){
+      const now = audioCtx.currentTime;
+      for(let i=0;i<4;i++){
+        const n = notes[Math.floor(Math.random()*notes.length)];
+        pluck(n, now + i*2.4, 4.5);
+      }
+      nodes.push(setTimeout(loop, 9600));
+    }
+    loop();
+  }
+
+  function stopAmbient(){
+    started = false;
+    nodes.forEach(t=>clearTimeout(t));
+    nodes = [];
+    if(audioCtx){
+      audioCtx.close();
+      audioCtx = null;
+    }
+  }
+
+  const btn = document.getElementById('music-toggle');
+  let playing = false;
+  btn.addEventListener('click', ()=>{
+    playing = !playing;
+    if(playing){
+      startAmbient();
+      btn.style.background = 'var(--gold)';
+    } else {
+      stopAmbient();
+      btn.style.background = 'var(--ink)';
+    }
+  });
+</script>
+
+</body>
+</html>
