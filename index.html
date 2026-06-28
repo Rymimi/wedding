@@ -270,7 +270,6 @@
   <div class="fade-in visible">
     <div class="eyebrow">samedi 25 juillet — Saint-Bruno-de-Montarville</div>
     <h1>Une semaine pour <em>se retrouver</em>,<br>tous ensemble.</h1>
-    <p class="sub">La Californie, Québec, Montréal — une seule maison, une seule grande table, et une semaine qui ne reviendra pas deux fois.</p>
     <div class="scroll-cue">défiler ↓</div>
   </div>
 </section>
@@ -316,7 +315,9 @@
   <div class="fade-in">
     <div class="eyebrow">Saint-Bruno-de-Montarville · samedi 25 juillet</div>
     <h1>Dites <em>oui</em>.</h1>
-    <p class="sub">On s'occupe du reste — vous, ouvrez simplement la porte.</p>
+    <p class="sub">Une longue table dressée dans la cour, les guirlandes qui s'allument à mesure que le ciel s'assombrit. Les cœurs seront déjà tous là — le reste n'est qu'une formalité.</p>
+    <p class="sub" style="margin-top:18px;">Nous prévoyons de l'aide et des gardiennes pour enfants afin que petits et grands profitent de la soirée en toute tranquillité. Traiteur, musique... en toute simplicité, une soirée d'été transformée en rassemblement marquant.</p>
+    <p class="sub" style="margin-top:18px;">On s'occupe du reste — vous, ouvrez simplement la porte.</p>
   </div>
 </section>
 
@@ -338,10 +339,11 @@
     if(started) return;
     started = true;
     audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if(audioCtx.state === 'suspended'){ audioCtx.resume(); }
     const master = audioCtx.createGain();
     master.gain.value = 0.0;
     master.connect(audioCtx.destination);
-    master.gain.linearRampToValueAtTime(0.07, audioCtx.currentTime + 3);
+    master.gain.linearRampToValueAtTime(0.18, audioCtx.currentTime + 3);
 
     const notes = [261.63, 329.63, 392.00, 440.00, 523.25]; // C E G A C (pentatonic-ish, soft)
     function pluck(freq, time, dur){
